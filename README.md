@@ -29,13 +29,14 @@ This is a bare bones NES starter project intended as a jumping off point for NES
 
 General order in source files:
 
-1. .segment "HEADER"
-2. .segment "ZEROPAGE"
-3. .segment "BSS"
-4. .segment "RODATA"
-5. .segment "CODE"
-6. .segment "VECTORS"
-7. .segment "CHR"
+1. CONSTANTS
+2. .segment "HEADER"
+3. .segment "ZEROPAGE"
+4. .segment "BSS"
+5. .segment "RODATA"
+6. .segment "CODE"
+7. .segment "VECTORS"
+8. .segment "CHR"
 
 Do not include empty segments.
 

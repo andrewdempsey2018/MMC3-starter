@@ -17,7 +17,7 @@ buttons_held: .res 1
 buttons_pressed: .res 1
 
 .segment "CODE"
-read_controller:
+.proc read_controller
   SAVE_REGISTERS
 
   lda buttons_held
@@ -39,3 +39,4 @@ get_buttons:
 
   RESTORE_REGISTERS
   rts
+.endproc
