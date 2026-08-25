@@ -1,7 +1,7 @@
 .segment "CODE"
 reset:
 ; --------------------------------------------------
-; Standard setup steps
+; Standard NES setup steps
 ; --------------------------------------------------
   sei
   cld

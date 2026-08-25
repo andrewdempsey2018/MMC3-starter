@@ -17,6 +17,7 @@ buttons_held: .res 1
 buttons_pressed: .res 1
 
 .segment "CODE"
+
 .proc read_controller
   SAVE_REGISTERS
 
