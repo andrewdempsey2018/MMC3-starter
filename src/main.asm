@@ -1,10 +1,7 @@
+; --------------------------------------------------
+; Include header here
+; --------------------------------------------------
 .include "header.asm"
-.include "macros.asm"
-.include "constants.asm"
-.include "reset.asm"
-.include "nmi.asm"
-.include "irq.asm"
-.include "controllers.asm"
 
 .segment "ZEROPAGE"
 sprite_x: .res 1
@@ -25,6 +22,16 @@ palette_table:
   .byte $0F,$09,$19,$29
   
 .segment "CODE"
+; --------------------------------------------------
+; Fixed bank includes
+; --------------------------------------------------
+.include "macros.asm"
+.include "constants.asm"
+.include "reset.asm"
+.include "nmi.asm"
+.include "irq.asm"
+.include "controllers.asm"
+
 main:
 ; --------------------------------------------------
 ; Disable nmi/rendering
