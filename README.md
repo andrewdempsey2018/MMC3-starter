@@ -24,11 +24,12 @@ This is a bare bones NES starter project intended as a jumping off point for NES
   -  ptr:    .res 2  
   -  ptr_lo = ptr  
   -  ptr_hi = ptr+1  
-**Keep indexed operands tightly packed
-  - lda (my_pointer),y
-  NOT
-  - lda (my_pointer), y
-note the ascii space after the ,
+
+Keep indexed operands tightly packed
+lda (my_pointer),y
+NOT
+lda (my_pointer), y
+note the ascii space after the ','
 
 # Order of segments
 
