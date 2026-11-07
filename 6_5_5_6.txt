@@ -1,0 +1,30 @@
+To reset the vertical scroll position on the NES 6502, write to the PPU Registers $2002 (to reset the address latch), $2000 (to set the nametable), and $2005 (to set the pixel offsets) during the Vertical Blank (VBlank) interval.Because the PPU uses the same internal memory registers for both scrolling and VRAM addresses ($2006/$2007), updating background tiles or text will completely corrupt your scroll position. You must reset the scroll at the very end of your NMI (VBlank) loop, after all background updates are finished.1. Standard Reset Code (During VBlank)This is the standard approach used inside your Non-Maskable Interrupt (NMI) vector. It sets both the horizontal and vertical scroll back to 0:
+
+
+ResetScroll:
+    BIT $2002     ; Read PPUSTATUS to reset the internal write toggle (w latch)
+    
+    LDA #%10000000; Enable NMI, select Top-Left Nametable ($2000)
+    STA $2000     ; Write to PPUCTRL
+    
+    LDA #$00      ; 0 pixel horizontal offset
+    STA $2005     ; PPUSCROLL (First write = X Scroll)
+    
+    LDA #$00      ; 0 pixel vertical offset
+    STA $2005     ; PPUSCROLL (Second write = Y Scroll)
+
+
+2. Why the Order MattersThe PPU relies on an internal toggle latch (w) to distinguish between first and second register writes:BIT $2002: Safely clears the w latch back to the "first write" state.STA $2000: Bits 0 and 1 specify the base nametable (00 = $2000 top-left, 01 = $2400 top-right, 10 = $2800 bottom-left, 11 = $2C00 bottom-right).First $2005 write: Specifies the fine and coarse horizontal (X) scroll.Second $2005 write: Specifies the fine and coarse vertical (Y) scroll
+
+3. Splitting/Resetting Vertical Scroll Mid-FrameIf you want to reset the vertical scroll mid-screen (e.g., to keep a fixed status bar at the top or bottom of the screen while the level scrolls), standard $2005 writes will not work. The PPU only copies the vertical scroll registers naturally during the pre-render scanline.To force a mid-frame vertical scroll reset, you must perform a specific 4-write sequence using both $2006 and $2005 (often timed using a Sprite 0 hit or an IRQ):
+
+; Mid-frame split to reset scroll to X=0, Y=0 in Nametable 0
+MidFrameResetScroll:
+    BIT $2002         ; Reset write toggle
+    LDA #$00
+    STA $2006         ; 1st Write: High byte of nametable address ($2000 -> $00)
+    STA $2005         ; 2nd Write: Y Scroll value (0)
+    STA $2005         ; 3rd Write: X Scroll value (0)
+    STA $2006         ; 4th Write: Low byte destination (forces the PPU to update)
+
+
